@@ -1,0 +1,169 @@
+---
+title: "The Monty Hall Problem"
+author: "Israel O. Dilán-Pantojas, Ian Flores"
+date: "December 14th, 2017"
+output:
+  pdf_document:
+    number_sections: yes
+    toc: yes
+  html_document:
+    df_print: paged
+    toc: yes
+subtitle: 'MATE 5001: Introduction to Probability by Prof. Luis Pericchi'
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Summary
+
+The famous _Monty Hall Problem_ deals with the probability of seemingly random events. In essence, at first glance the probability of picking the right 1 option, which contains a prize, out of 3 possible choices is 1/3 regardless the reveal of a non winning option and being allowed to choose again between the two remaining options after the reveal. An in-depth look of the problem shows us that in actuality the probability of these events is significantly different regarding the strategy of the player, where after the reveal if they stay with their first choice the probability remains 1/3 but if they switch it increased to 2/3. Magic no? No, read on to find out why!
+
+After providing you with some information, we will attempt to convince you by utilizing the Bayes conditional probability approach that this phenomenon is in fact probabilistic-ally sane. Furthermore we show that the conclusion is valid by simulating a 10,000 experiments of the Monty Hall Problem. In other words, we will show that the probability of winning the Monty Hall Problem increases when switching vs. sticking to your first choice, is in fact approximately 2/3 vs. 1/3 respectively.    
+
+_**Keywords:** Monty Hall Problem,  Conditional Probability, Random Events, Bayes Rule_ 
+
+# The Monty Hall Problem
+
+## Contextual information of the problem
+
+The Monty Hall problem was originally featured as the main problem from the game show "Let's make a deal", and it was named after the host Monty Hall. The problem is a famous class example of applied statistics and exemplifies misconceptions about probability. It was originally solved by Marilyn vos Savant, famous for being the person with the worlds highest IQ (Intelligence Quotient) as recorded by the Guinness Book of Records, in a piece she wrote for the "Ask Marilyn" column, a Parade magazine Sunday column back in 1990, where she stated that the probability of those three events was not completely blind to the selection of the first door and the reveal of information on the event of opening a door.
+
+So what is/was the actual Monty Hall problem?
+
+## Problem description
+
+Suppose you are participating from a game as the above mentioned player, you have been tasked with picking one out of 3 doors with the knowledge that behind one of them there is a prize, usually a brand new car, but player beware behind the other two there are splendorous, drum roll please ... **Goats!**, _a fabulous price if you ask us_, but keep in mind that you need the car to get to work and stuff, so you are trying to hit the car. That is to say you win if you successfully pick the door with the car and you lose if you pick one of the doors with a **Goat!**. We'd say go for the goat, but the game states that you should go for the car, _pity if you ask us_. 
+ 
+ 1. You pick 1 out if 3 numbered doors
+ 2. Upon your selection the game show host will reveal what lies behind one of the 2 doors you didn't pick, and surprise it will always be a **Goat!**, or as the game states a non-winning option.
+ 3. You are now allowed to choose whether to stick to your first choice, or switch to the other door left unopened by the host, on purpose, after reliving a **Goat!**, which he knew was there, and that he knew didn't have a car.   
+
+**_The hipothesis put foward by Lady Marilyn was that the Monty Hall Problem actually favors the outcome of one strategy because there is actually some extra information presented to the player during the reveal of a goat by the host._**
+
+### Probability at work 
+
+In general, if the player sticks to their original choice after the reveal of the non winning option the probability of winning remains 1/3 _(becaused nothing changed from the original problem **1 winning item in a set of 3 options**)_, but if the player chooses to switch the probability actually changes to 2/3. This may appear strange, but if we consider that some information has been revealed and one of the options has been discarded the phenomenon is suddenly not so strange _(because the situation changed, now the player can choose **1 winning item out of 2 items, knowing that the third one is a non winning option**)_. The fact is that removing an option changes the probability distribution from a completely random probability to a manipulated one. 
+
+The thing we are relaying on here, is information. Note that the first choice was picked blindly, the only information was 1 of the items was a winning option, the other 2 where non winning, 3 items in total for a probability of 1 out of 3. On the other hand, the second choice is made with the following knowledge, the player's first choice had a 1 out of 3 probability of being the right one, afterwards the reveal of the non winning option gave us more information that suggests that for 1 out of the 2 choices the player is now left with, which looks like a 1/2 probability, is in fact influenced by the knowledge of the game show host, who's informed selection of a non winning option, which is also not the player's pick, leaves the not yet selected option as the highest likely to be the "right one" _winning one_. This is because the host made an informed 1/2 selection excluding the player's pick and the winning option, so now the player is left with 1/3 chance when they stick to their original choice and a 2/3 chance when they switch after the final reveal.     
+
+### Conditional Probability
+
+$D$ is the set of doors, $D_{i}$ is a given door where the number $i$ represents the index of the door, note that $1 \le i \le 3$ and $W$ is the winning door, lastly $R_{i}$ is door reveal event where $D_{i}$ is opened to reveal a goat. $P(D_{i}) = 1/3$ is the initial probability of any door $i$ of being equal to $W$. Now let's assume the player picked $D_{3}$, so the host reveals that $D_{1}$ is a non-winning option revealing a **Goat!**, therefore $D_{1} = R_{1}$, and $D_{2} = W$. The conditional probability is as follows, if the player sticks to $D_{3}$ the case is now that the probability of $D_{3} = W$ is obtained from $P(D_{3}|R_{1})$. And in case the player switches to $D_{2}$, the probability of $D_{2} = W$ is obtained from $P(D_{2} | R_{1})$. 
+
+**_From the players perspective:_**
+Unfortunately we don't know which is the winning door, therefore in our case $P(R_{1}|D_{3}) = P(R_{2}|D_{3}) = 1/2$ because the host can reveal only one out of the two doors which are not the players choice for any one of them could be the **Goat!**.
+
+**_From the hosts perspective:_**
+We know that the host will only open a door such that $R_{i} \neq D_{3} \neq W$, in other words the reveal will always be a **Goat!** and cannot be the door already picked by the player, thus for the host $P(R_{2}|D_{2} = W) = 0$ and $P(R_{3}|D_{3}) = 0$, in general $P(R_{w}|W) = 0$, so $P(R_{1}|D_{2}) = 1$. 
+
+_Note that this information differential is what makes all the difference in this problem_. 
+
+From the player's perspective the probability for revealing a door given the player's choice is $P(R_{2}|D_{3}) = 1/2 = P(R_{1}|D_{3})$. But in actuality it is $P(R_{2}|D_{3}) = 0$ and $P(R_{1}|D_{3}) = 1$, because the host knows where the goat is. In both cases $P(R_{2}|D_{1}) = 1/3$
+remains the same, no information was added or removed.
+
+**_Probability if the player sticks:_**
+
+  $P(D_{3} | R_{1}) = {P(R_{1}| D_{2})P(D_{2}) \over P(R_{1}| D_{1})P(D_{1}) + P(R_{1}| D_{2})P(D_{2}) + P(R_{1}| D_{3})P(D_{3})} = {1/2 \times 1/3 \over 1 \times 1/3 + 0 \times 1/3 + 1/2 \times 1/3  }  = 1/3$
+
+**_Probability if the player switches:_**
+
+  $P(D_{2} | D_{1} R) = {P(R_{1}| D_{2})P(D_{2}) \over P(R_{1}| D_{1})P(D_{1}) + P(R_{1}| D_{2})P(D_{2}) + P(R_{1}| D_{3})P(D_{3})} = { 1 \times 1/3 \over 1 \times 1/3 + 0 \times 1/3 + 1/2 \times 1/3  } = 2/3$
+
+#### Thus as Marilyn vos Savant stated in her column this problems favors a certain outcome, namely that the user switch their selection after reveal to increase the oods of winning from 1/3 to 2/3. 
+
+## Method
+
+In order to study the probability of the events and observe the fact that on this specific problem, although at first hand it may seem as completely random, the probability of events is not completely independent and such is skewed towards favoring a certain outcome. We designed a small experiment that allows you to see the result of the conditional probability we just discussed in simulated data on over 10,000 iterations. 
+
+
+# Simulation Code
+
+To simulate the Monty Hall Problem we used the following R Code:
+```{r}
+# Select how many times to run the experiment Ex. 10000
+samples <- c(10000)
+
+# Create vector to hold the possible doors from the monthy hall problem
+door <- c("Door1","Door2", "Door3")
+
+# How many times was the door with the car selected in the first try 
+wins1 <- c(0)
+
+# How many times was the door with the car selected after switching 
+wins2 <- c(0)
+
+# Initialize counters for each of the 3 doors
+d1 <- d2 <- d3 <- 0
+
+# Run experiment "samples" times
+for (i in 1:samples)
+{
+  # Random door that contains the car
+  car <- sample(door)[1]
+  
+  # First door selected by player
+  choice1 <- sample(door)[1]
+  
+  # Reveal a GOAT!!!!!
+  reveal <- sample(door[door != car & door != choice1])[1]
+  
+  # Second door selected by player
+  choice2 <- sample(door[door != reveal & door != choice1])[1]
+  
+  # count wins 
+  if (car == choice1) {wins1 = (wins1 + 1)}
+  if (car == choice2) {wins2 = (wins2 + 1)}
+  
+  # count winning door
+  if (car == "Door1") {d1 = d1 + 1}
+  if (car == "Door2") {d2 = d2 + 1}
+  if (car == "Door3") {d3 = d3 + 1}
+}
+
+# Plotable Data Frame 
+win_data <- c(wins1/samples, wins2/samples)
+l <- c(d1, d2, d3)
+
+# Partition Graphical output
+X <- par(mfrow = c(1,2))
+
+# Barplots
+barplot(win_data, width = 1, names.arg = c("1st Choice","2nd Choice"),
+        xlab = "Choices", ylab = "Wins", main = "G.1 Ratio of wins per choice",
+        col = c("yellow", "green") ,  border = "dark gray",ylim = c(0,0.8))
+
+# Dotchart plot
+dotchart(l, labels = c("Door 1","Door 2", "Door 3"), 
+         main = "G.2 Times door had the prize", 
+         col = c("red", "blue", "orange"))
+```
+
+## Graphs
+
+On the graph G.1, we can observe that out of the $10,000$ runs the most like outcome was switching on the 2nd choice _(shown in green)_ with odds close to $0.6666667 = 2/3$, and also it is clear that sticking to the 1st choice _(shown in yellow)_ approximates $0.3333333 = 1/3$. 
+
+On the G.2 plot, we can appreciate that no door was significantly picked more often as the winning door, therefore the data suggests that the odds do not favor a specific door.   
+
+# Conclusion 
+As you can see from the graph, the probability of the events is really similar to the one developed in the model using Bayes rule and originally discovered by Marilyn vos Savant. In fact, the problem switching and improves the odds of winning from 1/3 when sticking to 2/3 when switching. This holds regardless of which door number is selected at each step, they are all almost equally likely to be the one with the prize on different iterations of the experiment. So as shown by the experiment and corroborated by the Bayes rule Marilyn vos Savant was right. If you ask us, there is no losing if the player is allowed to pick the goat as a price, but that is just us.
+
+# Citations
++ Weisstein, Eric W. "Monty Hall Problem." From MathWorld--A Wolfram Web Resource. http://mathworld.wolfram.com/MontyHallProblem.html
+
++ R Core Team (2015). R: A
+  language and environment for
+  statistical computing. R
+  Foundation for Statistical
+  Computing, Vienna, Austria.
+  URL https://www.R-project.org/.
+
++ H. Wickham. ggplot2: Elegant
+  Graphics for Data Analysis.
+  Springer-Verlag New York, 2009.
+  
++ Azad, K. (n.d.). Understanding the Monty Hall Problem. Retrieved December 10, 2017, from https://betterexplained.com/articles/understanding-the-Monty-hall-problem/
+
++ Marilyn vos Savant. (2017, December 10). In Wikipedia, The Free Encyclopedia. Retrieved 04:12, December 14, 2017, from https://en.wikipedia.org/w/index.php?title=Marilyn_vos_Savant&oldid=814682834
